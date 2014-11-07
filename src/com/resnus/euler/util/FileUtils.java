@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class FileUtils {
 
@@ -51,4 +52,49 @@ public class FileUtils {
 		
 		return contents;
 	}
+	
+	public static <E> Collection<E> readFileIntoCollection(Collection<E> col, String location, char separator){
+		File f = new File(location);
+		FileReader fr = null;
+		char[] buffer = new char[1024];
+		int count = 0;
+		StringBuilder sb = new StringBuilder();
+		
+		if(f.exists()){
+			try {
+				fr = new FileReader(f);
+				while((count = fr.read(buffer)) != -1){
+					for(int i = 0; i < count; i++){
+						if(buffer[i] != separator){
+							sb.append(buffer[i]);
+						}else{
+							col.add((E)sb.toString());
+							sb = new StringBuilder();
+							//sb.delete(0, sb.length());
+						}
+						//System.out.println("c: " + buffer[i]);
+						buffer[i] = 0;
+					}
+				}
+				col.add((E)sb.toString());
+				sb = new StringBuilder();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			finally{
+				if(fr != null){
+					try {
+						fr.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		return col;
+	}
+
 }
