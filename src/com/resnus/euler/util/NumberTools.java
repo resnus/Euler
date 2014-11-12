@@ -99,4 +99,8 @@ public class NumberTools {
 		}
 		return sum;
 	}
+	
+	public static int getNumDigits(int i){
+		return (int)(Math.log10(i) + 1);
+	}
 }
